@@ -23,9 +23,37 @@ let playerScores = 0;
 let computerScores = 0;
 let userInput;
 let letsPlay;
+let roundOutcome;
 
 function prompt(msg) {
   console.log(`=> ${msg}`);
+}
+
+function welcomeMsg() {
+  prompt('Do you want to play Rock Paper Scissors Lizard Spock? yes or no?');
+  letsPlay = readline.question().toLowerCase();
+}
+
+function checkLetsPlayInput() {
+  while (letsPlay !== 'yes' && letsPlay !== 'no') {
+    prompt('That is not a valid choice, choose yes or no!');
+    letsPlay = readline.question().toLowerCase();
+  }
+}
+
+function showInstructions() {
+  prompt(`Let's go!
+  The first player to reach 3 wins will be the overall winner!
+  Start by looking at the choices below and 
+  typing in one shorthand (Choice --> Shorthand):
+  
+    rock --> r
+    paper --> p
+    scissor --> ss
+    lizard --> l
+    spock --> s
+  
+  Your choice: `);
 }
 
 function chooseRandomRPS() {
@@ -40,38 +68,44 @@ function checkUserInput() {
   }
 }
 
-function checkWinner(user) {
+function getWinner(user) {
+  console.clear();
+
   let computersChoice = chooseRandomRPS();
   console.log('Computer chose: ', computersChoice);
+
   if ( user === computersChoice ) {
-    prompt(`It's a TIE! You: ${playerScores} - Computer: ${computerScores} 
-    Type a choice:`);
+    roundOutcome = 'tie';
   } else if (gameWinningRules[user][computersChoice]) {
-    playerScores += 1;
-    if (playerScores === 3) return;
-    prompt(`YOU WON this round! You: ${playerScores} - Computer: ${computerScores} 
-    Type a choice:`);
+    roundOutcome = 'win';
   } else {
-    computerScores += 1;
-    if (computerScores === 3) return;
-    prompt(`COMPUTER WON this round! You: ${playerScores} - Computer: ${computerScores} 
-    Type a choice:`);
+    roundOutcome = 'lose';
   }
 }
 
-function playGame() {
-  while (letsPlay[0] !== 'y' && letsPlay[0] !== 'n') {
-    prompt('That is not a valid choice, choose yes or no!');
-    letsPlay = readline.question().toLowerCase();
-  }
+function updateScore() {
+  if (roundOutcome === 'win') playerScores += 1;
+  if (roundOutcome === 'lose') computerScores += 1;
+}
 
-  if (letsPlay[0] === 'y' && (playerScores === 3 || computerScores === 3)) {
-    playerScores = 0;
-    computerScores = 0;
+function showRoundWinner() {
+  switch (roundOutcome) {
+    case 'tie':
+      prompt(`It's a TIE! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
+      break;
+    case 'win':
+      prompt(`YOU WON this round! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
+      break;
+    case 'lose':
+      prompt(`COMPUTER WON this round! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
+      break;
+    default:
   }
 }
 
-function finalScore() {
+function showWinner() {
+  console.clear();
+
   if (playerScores === 3) {
     prompt(`Congrats! You won! You: ${playerScores} - Computer: ${computerScores}`);
   }
@@ -79,39 +113,44 @@ function finalScore() {
   if (computerScores === 3) {
     prompt(`Computer won this time! You: ${playerScores} - Computer: ${computerScores}`);
   }
+}
 
-  prompt('What to play again? y or n');
+function resetScores() {
+  playerScores = 0;
+  computerScores = 0;
+}
+
+function playGameAgain() {
+  prompt('What to play again? yes or no?');
   letsPlay = readline.question().toLowerCase();
 }
 
+welcomeMsg();
 
-prompt('Do you want to play Rock Paper Scissors Lizard Spock? yes or no?');
-letsPlay = readline.question().toLowerCase();
+checkLetsPlayInput();
 
-playGame();
+while (letsPlay === 'yes') {
+  console.clear();
 
-while (letsPlay[0] === 'y') {
-  prompt(`Let's go!
-  The first player to reach 3 wins will be the overall winner!
-  Start by looking at the choices below and 
-  typing in one shorthand (Choice --> Shorthand):
-  
-    rock --> r
-    paper --> p
-    scissor --> ss
-    lizard --> l
-    spock --> s
-  
-  Your choice: `);
+  showInstructions();
 
   while (playerScores < 3 && computerScores < 3) {
     userInput = readline.question();
 
     checkUserInput();
-    checkWinner(userInput);
+    getWinner(userInput);
+    updateScore();
+    showRoundWinner();
+    if (playerScores === 3 || computerScores === 3) break;
   }
 
-  finalScore();
+  showWinner();
 
-  playGame();
+  playGameAgain();
+
+  checkLetsPlayInput();
+
+  resetScores();
 }
+
+console.clear();
