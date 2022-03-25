@@ -89,17 +89,12 @@ function updateScore() {
 }
 
 function showRoundWinner() {
-  switch (roundOutcome) {
-    case 'tie':
-      prompt(`It's a TIE! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
-      break;
-    case 'win':
-      prompt(`YOU WON this round! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
-      break;
-    case 'lose':
-      prompt(`COMPUTER WON this round! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
-      break;
-    default:
+  if (roundOutcome === 'tie') {
+    prompt(`It's a TIE! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
+  } else if (roundOutcome === 'win') {
+    prompt(`YOU WON this round! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
+  } else {
+    prompt(`COMPUTER WON this round! You: ${playerScores} - Computer: ${computerScores} Type a choice:`);
   }
 }
 
