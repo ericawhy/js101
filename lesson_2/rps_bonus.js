@@ -138,9 +138,13 @@ while (letsPlay === 'yes') {
     userInput = readline.question();
 
     checkUserInput();
+
     getWinner(userInput);
+
     updateScore();
+
     showRoundWinner();
+
     if (playerScores === 3 || computerScores === 3) break;
   }
 
